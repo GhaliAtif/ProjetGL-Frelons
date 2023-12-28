@@ -31,12 +31,17 @@ public class cutouTest {
         frame.add(lbl);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Sauvagarde de l'image resultat
+        String outputPath = "Footage/Cutout"+title+".jpg";
+        Imgcodecs.imwrite(outputPath, image);
+        System.out.println("Result saved as: " + outputPath);
     }
 
     public static void main(String[] args) {
         // Example usage
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        String imagePath = "C:\\Users\\offic\\IdeaProjects\\ProjetGL-Frelons\\15.jpg";
+        String imagePath = "Footage/frelon16.jpg";
         Mat result = cutout.cutout(imagePath);
 
         if (result != null) {
