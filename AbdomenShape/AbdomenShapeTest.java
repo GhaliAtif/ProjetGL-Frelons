@@ -1,7 +1,7 @@
+package AbdomenShape;
+
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
-
-import java.util.List;
 
 
 public class AbdomenShapeTest {
@@ -11,16 +11,16 @@ public class AbdomenShapeTest {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
 
-        String filepath="Footage/Triangle.png";
+        String filepath="Footage/triangle.png";
         Mat pictureArray = Imgcodecs.imread(filepath);
         if (pictureArray.width() < 1 || pictureArray.height() < 1) {
-            throw new CvException("OpenCV cannot read ");
+            throw new CvException("OpenCV cannot read the image ");
         }
         // Exemple
-        Point stingCoordinates = new Point(1000, 457);
+        Point stingCoordinates = new Point(998, 455);
 
         // Test  abdomenShape methode
-        String result=AbdomenShape.abdomenShape(pictureArray, stingCoordinates);
+        String result= AbdomenShape.abdomenShape(pictureArray, stingCoordinates);
 
         System.out.println("RESULT:   "+result);
     }

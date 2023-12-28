@@ -11,7 +11,7 @@ public class TestHornetLength {
 
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         // Chemin vers l'image
-        String imagePath = "C:/Users/offic/IdeaProjects/ProjetGL-Frelons/Footage/15_cutout.jpg";
+        String imagePath = "Footage/triangle.png";
 
         // Chargement de l'image
         Mat image = Imgcodecs.imread(imagePath);
