@@ -1,4 +1,4 @@
-package AbdomenShape;
+package Caracteristics;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Classe pour savoir si le frelon possede un abdomen pointu ou rondu et le classifier eventuellement
  */
-public class AbdomenShape {
+public class  AbdomenShape {
     /**
      * Fonction pour déterminer si le frelon possède un abdomen pointu ou rond et le classifier éventuellement.
      * @param pictureArray Matrice représentant le masque binaire du frelon

@@ -1,5 +1,6 @@
-package AbdomenShape;
+package Caracteristics;
 
+import Caracteristics.AbdomenShape;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 

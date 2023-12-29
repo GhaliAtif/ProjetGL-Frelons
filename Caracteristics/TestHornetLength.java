@@ -1,6 +1,7 @@
-package HornetLenght;
+package Caracteristics;
 
 
+import Caracteristics.HornetLength;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
@@ -11,7 +12,7 @@ public class TestHornetLength {
 
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         // Chemin vers l'image
-        String imagePath = "Footage/triangle.png";
+        String imagePath = "Footage/CutoutResult of Cutout.jpg";
 
         // Chargement de l'image
         Mat image = Imgcodecs.imread(imagePath);
@@ -33,13 +34,13 @@ public class TestHornetLength {
 
     public static void testHornetLengthForImage(Mat image, String imagePath) {
         // Appel de la fonction hornetLength avec l'image et le chemin de l'image
-        int[] result = HornetLength.hornetLength(image);
+        int[] result = HornetLength.calculer_HornetLength(image);
 
         // Affichage des résultats
         System.out.println("Longueur du frelon : " + result[0]);
         System.out.println("Coordonnées de l'extrémité de l'abdomen : (" + result[1] + ", " + result[2] + ")");
 
         // Appel de la fonction resultPlot avec les résultats
-        ResultPlot.resultPlot(image, result[1], result[2], result[2], result[0], 0, image.rows(), image.cols(), imagePath);
+        HornetLength.resultPlot(image, result[1], result[2], result[2], result[0], 0, image.rows(), image.cols(), imagePath);
     }
 }
