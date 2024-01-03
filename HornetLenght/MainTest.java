@@ -7,32 +7,26 @@ import org.opencv.highgui.HighGui;
 public class MainTest {
 
     public static void main(String[] args) {
-        // Charger l'image depuis un fichier
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        String imagePath = "C:/Users/offic/IdeaProjects/ProjetGL-Frelons/Footage/15_cutout.jpg";
-        Mat image = Imgcodecs.imread(imagePath);
 
-        // Vérifier si l'image est chargée correctement
-        if (image.empty()) {
-            System.err.println("Erreur lors du chargement de l'image.");
-            System.exit(1);
+        // Replace this with the path to your test image
+        String imagePath = "C:\\Users\\offic\\IdeaProjects\\ProjetGL-Frelons\\Footage\\15_cutout.jpg";
+
+        Mat picture = Imgcodecs.imread(imagePath, Imgcodecs.IMREAD_GRAYSCALE);
+
+        if (picture.empty()) {
+            System.err.println("Error reading the image");
+            return;
         }
 
-        // Check the number of channels in the input image
-        System.out.println("Number of channels: " + image.channels());
+        String pictureFile = "HornetImage.jpg";
 
-        // Appliquer l'analyse de la longueur du frelon
-        int[] lengthResult = HornetLength.hornetLength(image);
+        int[] result = HornetLength.hornetLength(picture, pictureFile);
 
-        // Afficher la longueur du frelon
-        System.out.println("Longueur du frelon : " + lengthResult[0]);
+        System.out.println("Hornet Length: " + result[0]);
+        System.out.println("Sting Coordinates: (" + result[1] + ", " + result[2] + ")");
 
-        // Appliquer la visualisation des résultats
-        ResultPlot.resultPlot(image, lengthResult[0], lengthResult[1], lengthResult[2],
-                0, 0, image.rows(), image.cols(), imagePath);
-
-        // Attendre la fermeture de la fenêtre graphique
-        HighGui.waitKey();
+        ResultPlot.resultPlot(picture, result[1], result[2], 0, result[2] - result[0] / 2, result[0], picture.rows(), picture.cols(), pictureFile);
     }
 }
 

@@ -7,35 +7,25 @@ import org.opencv.imgproc.Imgproc;
 public class BoundingLines {
 
     public static int zeroPixels(Mat line) {
-        // Convert the line to grayscale
-        Imgproc.cvtColor(line, line, Imgproc.COLOR_BGR2GRAY);
-
-        // Count the number of black pixels in the line
-        int blackPixelCount = line.rows() * line.cols() - Core.countNonZero(line);
-
-        return blackPixelCount;
+        return line.cols() - Core.countNonZero(line);
     }
 
     public static int[] boundingLines(Mat arrayImage) {
-        // Récupération du nombre de lignes et de colonnes de la matrice de l'image binaire du frelon
         int numberOfLines = arrayImage.rows();
         int numberOfColumns = arrayImage.cols();
 
         System.out.println("Number of lines: " + numberOfLines);
 
-        // Recherche de la ligne inférieure de la zone d'analyse
         int counter = numberOfLines;
         int pixelCount = 0;
 
-        double horizontalNumber = numberOfColumns * 0.4;
+        double horizontalNumber = arrayImage.cols() * 0.4;
         while (pixelCount < horizontalNumber && counter > 0) {
             pixelCount = zeroPixels(arrayImage.row(counter - 1));
             counter--;
         }
 
         int lowerLine = counter;
-
-        // Recherche de la ligne supérieure de la zone d'analyse
 
         counter = 0;
         pixelCount = 0;
@@ -47,12 +37,10 @@ public class BoundingLines {
 
         int upperLine = counter;
 
-        // Recherche de la colonne gauche de la zone d'analyse
-
         counter = 0;
         pixelCount = 0;
 
-        double verticalNumber = numberOfLines * 0.1;
+        double verticalNumber = arrayImage.rows() * 0.1;
         while (pixelCount < verticalNumber && counter < numberOfColumns) {
             pixelCount = zeroPixels(arrayImage.col(counter));
             counter++;
