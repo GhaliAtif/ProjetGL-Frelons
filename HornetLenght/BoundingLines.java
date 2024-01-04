@@ -10,49 +10,70 @@ public class BoundingLines {
         return line.cols() - Core.countNonZero(line);
     }
 
-    public static int[] boundingLines(Mat arrayImage) {
+    public static int[] bounding_lines(Mat arrayImage) {
         int numberOfLines = arrayImage.rows();
         int numberOfColumns = arrayImage.cols();
 
         System.out.println("Number of lines: " + numberOfLines);
 
-        int counter = numberOfLines;
+        int lowerLine = findLowerLine(arrayImage);
+        int upperLine = findUpperLine(arrayImage);
+        int leftLine = findLeftLine(arrayImage);
+
+        System.out.println("Upper line: " + upperLine);
+        System.out.println("Lower line: " + lowerLine);
+        System.out.println("Left line: " + leftLine);
+
+        // Ajout d'un décalage à lowerLine
+        int OFFSET = 5;  // Ajustez cette valeur selon vos besoins
+        lowerLine += OFFSET;
+
+        return new int[]{upperLine, lowerLine, leftLine};
+    }
+
+    private static int findLowerLine(Mat arrayImage) {
+        int numberOfLines = arrayImage.rows();
+        int horizontalNumber = (int) (arrayImage.cols() * 0.4);
+
+        int counter = numberOfLines - 1;
         int pixelCount = 0;
 
-        double horizontalNumber = arrayImage.cols() * 0.4;
         while (pixelCount < horizontalNumber && counter > 0) {
-            pixelCount = zeroPixels(arrayImage.row(counter - 1));
+            pixelCount = zeroPixels(arrayImage.row(counter));
             counter--;
         }
 
-        int lowerLine = counter;
+        return counter;
+    }
 
-        counter = 0;
-        pixelCount = 0;
+    private static int findUpperLine(Mat arrayImage) {
+        int numberOfLines = arrayImage.rows();
+        int horizontalNumber = (int) (arrayImage.cols() * 0.4);
+
+        int counter = 0;
+        int pixelCount = 0;
 
         while (pixelCount < horizontalNumber && counter < numberOfLines) {
             pixelCount = zeroPixels(arrayImage.row(counter));
             counter++;
         }
 
-        int upperLine = counter;
+        return counter;
+    }
 
-        counter = 0;
-        pixelCount = 0;
+    private static int findLeftLine(Mat arrayImage) {
+        int numberOfColumns = arrayImage.cols();
+        int verticalNumber = (int) (arrayImage.rows() * 0.1);
 
-        double verticalNumber = arrayImage.rows() * 0.1;
+        int counter = 0;
+        int pixelCount = 0;
+
         while (pixelCount < verticalNumber && counter < numberOfColumns) {
             pixelCount = zeroPixels(arrayImage.col(counter));
             counter++;
         }
 
-        int leftLine = counter;
-
-        System.out.println("Upper line: " + upperLine);
-        System.out.println("Lower line: " + lowerLine);
-        System.out.println("Left line: " + leftLine);
-
-        return new int[]{upperLine, lowerLine, leftLine};
+        return counter;
     }
 }
 

@@ -1,8 +1,8 @@
 package HornetLenght;
 
-import org.opencv.core.*;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.highgui.HighGui;
 
 public class MainTest {
 
@@ -21,13 +21,24 @@ public class MainTest {
 
         String pictureFile = "HornetImage.jpg";
 
-        int[] result = HornetLength.hornetLength(picture, pictureFile);
+        // Utilisez la méthode correcte bounding_lines
+        int[] lines = BoundingLines.bounding_lines(picture);
+
+        System.out.println("Upper Line: " + lines[0]);
+        System.out.println("Lower Line: " + lines[1]);
+        System.out.println("Left Line: " + lines[2]);
+
+        // Utilisez les lignes correctes pour calculer la longueur du frelon
+        int[] result = HornetLength.hornetLength(picture, pictureFile, lines[0], lines[1], lines[2]);
 
         System.out.println("Hornet Length: " + result[0]);
         System.out.println("Sting Coordinates: (" + result[1] + ", " + result[2] + ")");
 
-        ResultPlot.resultPlot(picture, result[1], result[2], 0, result[2] - result[0] / 2, result[0], picture.rows(), picture.cols(), pictureFile);
+        // Utilisez les lignes correctes pour dessiner les résultats
+        ResultPlot.resultPlot(picture, lines[1], lines[0], lines[2], result[2], result[0], picture.rows(), picture.cols(), pictureFile);
     }
 }
+
+
 
 
