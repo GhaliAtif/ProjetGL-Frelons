@@ -4,7 +4,7 @@
         <param>
             <seuil>3</seuil>
             <echelle>100</echelle>
-            <forcer_debut_saison>0</forcer_debut_saison>
+            <forcer_debut_saison>1</forcer_debut_saison>
         </param>
     </parameters>
 </data>

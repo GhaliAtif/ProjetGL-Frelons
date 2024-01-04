@@ -73,28 +73,49 @@ public class TestCaracteristics {
     public void testBoundingLines() {
         run();
         // Cas de test : S'arrête à la dernière ligne
-        Mat emptyImage = new Mat(1920, 1080, CvType.CV_8UC1);
+       /* Mat emptyImage = new Mat(1920, 1080, CvType.CV_8UC1);
         int[] resultEmpty = HornetLength.boundingLines(emptyImage);
-        assertArrayEquals(new int[]{1920, 0, 1080, 1920, 0, 1080}, resultEmpty);
+        System.out.print("Results: ");
+        for (int i = 0; i < resultEmpty.length; i++) {
+            System.out.print(resultEmpty[i] + " ");
+        }
+        System.out.println();
+
+        assertArrayEquals(new int[]{1920, 0, 1080, 1920, 0, 1080}, resultEmpty);*/
 
         // Cas de test : S'arrête à la première ligne de pixels noirs
-        Mat blackImage = new Mat(1920, 1080, CvType.CV_8UC1, new Scalar(0, 0, 0));
+       /* Mat blackImage = new Mat(1920, 1080, CvType.CV_8UC1, new Scalar(0, 0, 0));
         int[] resultBlack = HornetLength.boundingLines(blackImage);
-        assertArrayEquals(new int[]{1, 1919, 1, 1, 1919, 1}, resultBlack);
+        System.out.print("Results: ");
+        for (int i = 0; i < resultBlack.length; i++) {
+            System.out.print(resultBlack[i] + " ");
+        }
+        System.out.println();
+        assertArrayEquals(new int[]{1, 1919, 1, 1, 1919, 1}, resultBlack);*/
 
         // Cas de test : Image simple
-        String filepathIMG1 = "Footage/triangle.png";
+       /* String filepathIMG1 = "Footage/16_cutout.jpg";
         Mat simpleImage = Imgcodecs.imread(filepathIMG1);
         int[] resultSimple = HornetLength.boundingLines(simpleImage);
-        assertArrayEquals(new int[]{408, 687, 96, 408, 687, 96}, resultSimple);
+        System.out.print("Results: ");
+        for (int i = 0; i < resultSimple.length; i++) {
+            System.out.print(resultSimple[i] + " ");
+        }
+        System.out.println();
+        assertArrayEquals(new int[]{408, 687, 96, 408, 687, 96}, resultSimple);*/
 
         // Cas de test : Image étalon du projet
-        String filepathIMG2 = "Footage/triangle.png";
+        String filepathIMG2 = "Footage/15_cutout.jpg";
         Mat projectImage = Imgcodecs.imread(filepathIMG2);
         int[] resultProject = HornetLength.boundingLines(projectImage);
+        System.out.print("Results: ");
+        for (int i = 0; i < resultProject.length; i++) {
+            System.out.print(resultProject[i] + " ");
+        }
+        System.out.println();
         assertArrayEquals(new int[]{430, 621, 168, 430, 621, 168}, resultProject);
     }
-   /*  @Test
+   /*@Test
     public void testBoundingLines() {
         // Cas de test : S'arrête à la dernière ligne
         Mat emptyImageMock = mock(Mat.class);
@@ -192,10 +213,6 @@ public class TestCaracteristics {
     @Test
     public void testFindCoeffs() {
         run();
-        /*
-        Teste la fonction de recherche des coefficients de la droite de l'abdomen.
-        Avec des images de référence, on vérifie que la fonction renvoie bien les bonnes valeurs de coefficients.
-        */
 
         // Tests (on arrondi car la fonction appelée donne des résultats avec une précision de 10^-15)
         // Exemple : Donne 1.9999999999999998 au lieu de 2

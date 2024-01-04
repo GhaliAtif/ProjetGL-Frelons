@@ -60,9 +60,8 @@ public class HornetClassification {
             characteristics.put("abdomenshape", abdomenShapeValue);
 
             // Détermination de la caste
-            String caste = "";
-            if (actualMonth <= seuil && flag == 0) {
-                characteristics.put("cast", "Fondatrice");
+            //if (actualMonth <= seuil && flag == 0) {
+               // characteristics.put("cast", "Fondatrice");
                 int year = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date()));
                 String path = "Results/length" + year + ".xml";
                 if (!new File(path).exists()) {
@@ -79,8 +78,8 @@ public class HornetClassification {
                 length.appendChild(doc.createTextNode(String.valueOf(reelLength)));
                 data.appendChild(length);
                 saveXmlDocument(doc, path);
-            } else {
-                Document doc = parseXmlDocument("Results/length" + new SimpleDateFormat("yyyy").format(new Date()) + ".xml");
+           // } else {
+
                 NodeList lengthNodes = doc.getElementsByTagName("length");
                 double minLength = 9999;
                 for (int i = 0; i < lengthNodes.getLength(); i++) {
@@ -89,20 +88,29 @@ public class HornetClassification {
                         minLength = lengthValue;
                     }
                 }
+                double maxLength = Double.MIN_VALUE; // Initialize to the smallest possible double value
+                for (int i = 0; i < lengthNodes.getLength(); i++) {
+                    double lengthValue = Double.parseDouble(lengthNodes.item(i).getFirstChild().getNodeValue());
+                    if (lengthValue > maxLength) {
+                        maxLength = lengthValue;
+                    }
+                }
+                System.out.println("Longeur Minimale : " + minLength);
+                System.out.println("Longeur Maximale : " + maxLength);
+                //Determination de la caste du frelon en se basant sur la longeur minimale
+                if (abdomenShapeValue != null) {
+                    if (abdomenShapeValue.equals("pointu") && reelLength >= maxLength) {
+                        characteristics.put("cast", "Reine ou Fondatrice");
 
-                System.out.println("longueur minimale de cette année : " + minLength);
-                if (abdomenShapeValue.equals("pointu") && reelLength >= minLength) {
-                    characteristics.put("cast", "Reine");
-                    caste = "Fondatrice";
-                } else if (abdomenShapeValue.equals("pointu") && reelLength < minLength) {
-                    caste = "Ouvriere";
-                } else if (abdomenShapeValue.equals("rond")) {
-                    caste = "Male";
+                    } else if (abdomenShapeValue.equals("pointu") && (reelLength >= minLength || reelLength < maxLength)) {
+                        characteristics.put("cast", "Ouvriere");
+
+                    } else if (abdomenShapeValue.equals("rond")) {
+                        characteristics.put("cast", "Male");
+
+                    }
                 }
-                if (!caste.equals("")) {
-                    characteristics.put("cast", caste);
-                }
-            }
+
             return characteristics;
         }
 

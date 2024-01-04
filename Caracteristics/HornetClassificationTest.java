@@ -15,7 +15,7 @@ public class HornetClassificationTest {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         //nu.pattern.OpenCV.loadLocally();
 
-        String filepath="Footage/33_cutout.jpg";
+        String filepath="Footage/15_cutout.jpg";
         Mat pictureArray = Imgcodecs.imread(filepath);
         if (pictureArray.width() < 1 || pictureArray.height() < 1) {
             throw new CvException("OpenCV cannot read the image ");
@@ -25,8 +25,12 @@ public class HornetClassificationTest {
 
         // Affichage des résultats
         System.out.println("Résultats de la classification :");
-        for (Map.Entry<String, String> entry : results.entrySet()) {
-            System.out.println(entry.getKey() + " : " + entry.getValue());
+        if(results!=null){
+            for (Map.Entry<String, String> entry : results.entrySet()) {
+                System.out.println(entry.getKey() + " : " + entry.getValue());
+            }
         }
+        else System.out.println("No results CutOut is not well defined");
+
     }
 }

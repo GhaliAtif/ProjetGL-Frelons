@@ -13,7 +13,7 @@ public class TestHornetLength {
     public static void main(String[] args) {
         // Charger l'image depuis un fichier
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        String imagePath = "Footage/CutoutResult of Cutout.jpg";
+        String imagePath = "Footage/16_cutout.jpg";
         Mat image = Imgcodecs.imread(imagePath);
 
         // Vérifier si l'image est chargée correctement
@@ -25,7 +25,7 @@ public class TestHornetLength {
         // Convertir l'image en niveaux de gris si elle n'est pas déjà en niveaux de gris
         if (image.channels() > 1) {
             Imgproc.cvtColor(image, image, Imgproc.COLOR_BGR2GRAY);
-        }
+       }
         // Check the number of channels in the input image
         System.out.println("Number of channels: " + image.channels());
 
@@ -36,8 +36,7 @@ public class TestHornetLength {
         System.out.println("Longueur du frelon : " + lengthResult[0]);
 
         // Appliquer la visualisation des résultats
-        HornetLength.resultPlot(image, lengthResult[0], lengthResult[1], lengthResult[2],
-                0, 0, image.rows(), image.cols(), imagePath);
+        HornetLength.resultPlot(image, imagePath);
 
         // Attendre la fermeture de la fenêtre graphique
         HighGui.waitKey();

@@ -43,7 +43,7 @@ public class cutouTest {
     public static void main(String[] args) {
         // Example usage
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        String imagePath = "Footage/33.jpg";
+        String imagePath = "Footage/30.jpg";
         String title= imagePath.substring(8,10);
         Mat result = cutout.cutout(imagePath);
 
