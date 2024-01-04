@@ -1,3 +1,5 @@
+package CutOut;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
@@ -33,7 +35,7 @@ public class cutouTest {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Sauvagarde de l'image resultat
-        String outputPath = "Footage/Cutout"+title+".jpg";
+        String outputPath = "Footage/"+title+"_cutout.jpg";
         Imgcodecs.imwrite(outputPath, image);
         System.out.println("Result saved as: " + outputPath);
     }
@@ -41,11 +43,12 @@ public class cutouTest {
     public static void main(String[] args) {
         // Example usage
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        String imagePath = "Footage/frelon16.jpg";
+        String imagePath = "Footage/33.jpg";
+        String title= imagePath.substring(8,10);
         Mat result = cutout.cutout(imagePath);
 
         if (result != null) {
-            displayImage(result, "Result of Cutout");
+            displayImage(result,title);
         }
     }
 }
