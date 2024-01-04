@@ -147,7 +147,11 @@ public class HornetLength {
                                  int numberOfLines, int numberOfColumns, String pictureFile) {
 
         // Convertir l'image en niveaux de gris
-        Imgproc.cvtColor(picture, picture, Imgproc.COLOR_BGR2GRAY);
+       // Imgproc.cvtColor(picture, picture, Imgproc.COLOR_BGR2GRAY);
+        // Convertir l'image en niveaux de gris si elle n'est pas déjà en niveaux de gris
+        if (picture.channels() > 1) {
+            Imgproc.cvtColor(picture, picture, Imgproc.COLOR_BGR2GRAY);
+        }
 
         // Ligne inférieure
         Imgproc.line(picture, new Point(0, lowerLine), new Point(numberOfColumns, lowerLine), new Scalar(0, 0, 255), 2);

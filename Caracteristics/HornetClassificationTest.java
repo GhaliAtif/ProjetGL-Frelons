@@ -13,9 +13,9 @@ public class HornetClassificationTest {
     public static void main(String[] args) throws Exception {
         // Loading OpenCV library......
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        //nu.pattern.OpenCV.loadLocally();
 
-
-        String filepath="Footage/CutoutResult of Cutout.jpg";
+        String filepath="Footage/33_cutout.jpg";
         Mat pictureArray = Imgcodecs.imread(filepath);
         if (pictureArray.width() < 1 || pictureArray.height() < 1) {
             throw new CvException("OpenCV cannot read the image ");

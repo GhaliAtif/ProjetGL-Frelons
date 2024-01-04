@@ -37,7 +37,7 @@ public class HornetClassification {
          */
         public static Map<String, String> classifyHornet(Mat pictureFile) {
             // Ouverture du xml des paramètres
-            Document parameters = parseXmlDocument("parameters.xml");
+            Document parameters = parseXmlDocument("Results/parameters.xml");
 
             // Récupération des paramètres
             int seuil = Integer.parseInt(parameters.getElementsByTagName("seuil").item(0).getFirstChild().getNodeValue());
