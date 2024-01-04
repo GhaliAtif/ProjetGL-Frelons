@@ -21,7 +21,7 @@ public class HornetLength {
     }
 
 
-    public static int[] boundingLines(Mat arrayImage) {
+   /* public static int[] boundingLines(Mat arrayImage) {
         // Récupération du nombre de lignes et de colonnes de la matrice de l'image binaire du frelon
         int numberOfLines = arrayImage.rows();
         int numberOfColumns = arrayImage.cols();
@@ -79,7 +79,56 @@ public class HornetLength {
 
         // Return the values
         return new int[]{upperLine, lowerLine, leftLine, upperLine, lowerLine, leftLine};
-    }
+    }*/
+   public static int[] boundingLines(Mat arrayImage) {
+       // Récupération du nombre de lignes et de colonnes de la matrice de l'image binaire du frelon
+       int numberOfLines = arrayImage.rows();
+       int numberOfColumns = arrayImage.cols();
+
+       System.out.println("Number of lines: " + numberOfLines);
+
+       // Recherche le la ligne inférieure de la zone d'analyse
+       int counter = numberOfLines;
+       int pixelCount = 0;
+
+       double horizontalNumber = numberOfColumns * 0.4;
+       while (pixelCount < horizontalNumber && counter > 0) {
+           pixelCount = zeroPixels(arrayImage.row(counter - 1));
+           counter--;
+       }
+
+       int lowerLine = counter;
+
+       // Recherche le la ligne supérieure de la zone d'analyse
+       counter = 0;
+       pixelCount = 0;
+
+       while (pixelCount < horizontalNumber && counter < numberOfLines) {
+           pixelCount = zeroPixels(arrayImage.row(counter));
+           counter++;
+       }
+
+       int upperLine = counter;
+
+       // Recherche de la colonne gauche de la zone d'analyse
+       counter = 0;
+       pixelCount = 0;
+
+       double verticalNumber = numberOfLines * 0.1;
+       while (pixelCount < verticalNumber && counter < numberOfColumns) {
+           pixelCount = zeroPixels(arrayImage.col(counter));
+           counter++;
+       }
+
+       int leftLine = counter;
+
+       System.out.println("Upper line: " + upperLine);
+       System.out.println("Lower line: " + lowerLine);
+       System.out.println("Left line: " + leftLine);
+
+       // Return the values
+       return new int[]{upperLine, lowerLine, leftLine};
+   }
 
 
     public static int[] calculer_HornetLength(Mat picture) {
@@ -143,43 +192,61 @@ public class HornetLength {
 
         return new int[]{lengthValue, stingCoordinates[0], stingCoordinates[1]};
     }
-    public static int resultPlot(Mat picture, int lowerLine, int upperLine, int leftLine, int indexMax, int pixelCount,
-                                 int numberOfLines, int numberOfColumns, String pictureFile) {
+
+    public static int resultPlot(Mat picture, String imagePath) {
+        // Assuming you have an input image (replace "your_image_path" with the actual path)
+        Mat inputImage = Imgcodecs.imread(imagePath);
+
+        // calcluler les bounding lines
+        int[] lines = boundingLines(inputImage);
+        int upperLine = lines[0];
+        int lowerLine = lines[1];
+        int leftLine = lines[2];
+
+        // Calculer la longeur de frelon
+        int[] lengthInfo = calculer_HornetLength(inputImage);
+        int lengthValue = lengthInfo[0];
+        int stingX = lengthInfo[1];
+        int stingY = lengthInfo[2];
+
+        int numberOfLines = picture.rows();
+        int numberOfColumns = picture.cols();
 
         // Convertir l'image en niveaux de gris
-       // Imgproc.cvtColor(picture, picture, Imgproc.COLOR_BGR2GRAY);
+        // Imgproc.cvtColor(picture, picture, Imgproc.COLOR_BGR2GRAY);
+        Mat colorPicture = new Mat();
         // Convertir l'image en niveaux de gris si elle n'est pas déjà en niveaux de gris
-        if (picture.channels() > 1) {
-            Imgproc.cvtColor(picture, picture, Imgproc.COLOR_BGR2GRAY);
-        }
+        // if (picture.channels() > 1) {
+        Imgproc.cvtColor(picture, colorPicture, Imgproc.COLOR_GRAY2BGR);
+        // }
 
         // Ligne inférieure
-        Imgproc.line(picture, new Point(0, lowerLine), new Point(numberOfColumns, lowerLine), new Scalar(0, 0, 255), 2);
+        Imgproc.line(colorPicture, new Point(0, lowerLine), new Point(numberOfColumns - 1, lowerLine), new Scalar(0, 0, 255), 2);
 
         // Ligne supérieure
-        Imgproc.line(picture, new Point(0, upperLine), new Point(numberOfColumns, upperLine), new Scalar(0, 0, 255), 2);
+        Imgproc.line(colorPicture, new Point(0, upperLine), new Point(numberOfColumns - 1, upperLine), new Scalar(0, 0, 255), 2);
 
         // Ligne gauche
-        Imgproc.line(picture, new Point(leftLine, 0), new Point(leftLine, numberOfLines), new Scalar(0, 0, 255), 2);
+        Imgproc.line(colorPicture, new Point(leftLine, 0), new Point(leftLine, numberOfLines - 1), new Scalar(0, 0, 255), 2);
 
         // Ligne droite
-        int positionning = (int) (leftLine + pixelCount);
-        Imgproc.line(picture, new Point(positionning, 0), new Point(positionning, numberOfLines), new Scalar(0, 0, 255), 2);
+        int positionX = stingX;  // Assuming the length line starts from the sting coordinates
+        Imgproc.line(colorPicture, new Point(positionX, 0), new Point(positionX, numberOfLines - 1), new Scalar(0, 0, 255), 2);
 
         // Ligne de longueur maximale
-        Imgproc.line(picture, new Point(leftLine, indexMax + upperLine), new Point(positionning, indexMax + upperLine),
+        Imgproc.line(colorPicture, new Point(leftLine, stingY), new Point(stingX, stingY),
                 new Scalar(0, 255, 0), 2);
 
         // Extrémité de la ligne de longueur maximale
-        Imgproc.circle(picture, new Point(positionning, indexMax + upperLine), 10, new Scalar(255, 75, 0), -1);
+        Imgproc.circle(colorPicture, new Point(stingX, stingY), 10, new Scalar(255, 75, 0), -1);
 
-        HighGui.imshow("Hornet length", picture);
+        HighGui.imshow("Hornet length", colorPicture);
 
         // Écriture de l'image avec les lignes de recherche dessinées pour démonstration
-        String outputfile = pictureFile.substring(0, pictureFile.length() - 4) + "_length.jpg";
+        String outputfile = imagePath.substring(0, imagePath.length() - 4) + "_length.jpg";
         outputfile = outputfile.replace("Footage/", "Footage/");
         System.out.println(outputfile);
-        Imgcodecs.imwrite(outputfile, picture);
+        Imgcodecs.imwrite(outputfile, colorPicture);
         HighGui.waitKey(0);
 
         return 0;
