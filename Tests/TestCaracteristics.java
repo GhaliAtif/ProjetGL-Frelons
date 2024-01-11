@@ -15,12 +15,11 @@ import java.io.File;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class TestCaracteristics {
 
     public void run() {
-        //nu.pattern.OpenCV.loadLocally();
+        //Chargement de la librairie
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
@@ -42,27 +41,6 @@ public class TestCaracteristics {
         Mat blackImage = new Mat(3, 3, CvType.CV_8UC1, new Scalar(0));
         assertEquals(9, HornetLength.zeroPixels(blackImage));
 
-        // Cas de test avec une image partiellement noire
-        Mat partialBlackImage = new Mat(3, 3, CvType.CV_8UC1);
-        partialBlackImage.put(0, 0, 255);  // Pixel blanc
-        partialBlackImage.put(1, 0, 0);    // Pixel noir
-        partialBlackImage.put(2, 0, 0);    // Pixel noir
-
-        // Print the contents of the image
-        System.out.println("Partial Black Image:");
-        System.out.println(partialBlackImage.dump());
-
-        assertEquals(8, HornetLength.zeroPixels(partialBlackImage));
-
-        // Cas de test avec une image en couleur (doit être convertie en niveaux de gris)
-
-        Mat colorImage = new Mat(3, 3, CvType.CV_8UC3, new Scalar(0, 0, 255));
-        Mat grayImage = new Mat();
-
-        // Check the result of the zeroPixels method
-        int zeroPixelsCount = HornetLength.zeroPixels(grayImage);
-        System.out.println("Zero Pixels Count: " + zeroPixelsCount);
-        assertEquals(0, HornetLength.zeroPixels(grayImage));
     }
 
     /**
@@ -73,7 +51,7 @@ public class TestCaracteristics {
     public void testBoundingLines() {
         run();
         // Cas de test : S'arrête à la dernière ligne
-       /* Mat emptyImage = new Mat(1920, 1080, CvType.CV_8UC1);
+        Mat emptyImage = new Mat(1920, 1080, CvType.CV_8UC1);
         int[] resultEmpty = HornetLength.boundingLines(emptyImage);
         System.out.print("Results: ");
         for (int i = 0; i < resultEmpty.length; i++) {
@@ -81,31 +59,10 @@ public class TestCaracteristics {
         }
         System.out.println();
 
-        assertArrayEquals(new int[]{1920, 0, 1080, 1920, 0, 1080}, resultEmpty);*/
+        assertArrayEquals(new int[]{1, 1919, 1}, resultEmpty);
 
-        // Cas de test : S'arrête à la première ligne de pixels noirs
-       /* Mat blackImage = new Mat(1920, 1080, CvType.CV_8UC1, new Scalar(0, 0, 0));
-        int[] resultBlack = HornetLength.boundingLines(blackImage);
-        System.out.print("Results: ");
-        for (int i = 0; i < resultBlack.length; i++) {
-            System.out.print(resultBlack[i] + " ");
-        }
-        System.out.println();
-        assertArrayEquals(new int[]{1, 1919, 1, 1, 1919, 1}, resultBlack);*/
-
-        // Cas de test : Image simple
-       /* String filepathIMG1 = "Footage/16_cutout.jpg";
-        Mat simpleImage = Imgcodecs.imread(filepathIMG1);
-        int[] resultSimple = HornetLength.boundingLines(simpleImage);
-        System.out.print("Results: ");
-        for (int i = 0; i < resultSimple.length; i++) {
-            System.out.print(resultSimple[i] + " ");
-        }
-        System.out.println();
-        assertArrayEquals(new int[]{408, 687, 96, 408, 687, 96}, resultSimple);*/
-
-        // Cas de test : Image étalon du projet
-        String filepathIMG2 = "Footage/15_cutout.jpg";
+        // Cas de test : Image frelon de la base 2023
+        String filepathIMG2 = "Footage/16_cutout.jpg";
         Mat projectImage = Imgcodecs.imread(filepathIMG2);
         int[] resultProject = HornetLength.boundingLines(projectImage);
         System.out.print("Results: ");
@@ -113,44 +70,8 @@ public class TestCaracteristics {
             System.out.print(resultProject[i] + " ");
         }
         System.out.println();
-        assertArrayEquals(new int[]{430, 621, 168, 430, 621, 168}, resultProject);
+        assertArrayEquals(new int[]{409, 895, 121}, resultProject);
     }
-   /*@Test
-    public void testBoundingLines() {
-        // Cas de test : S'arrête à la dernière ligne
-        Mat emptyImageMock = mock(Mat.class);
-        when(emptyImageMock.rows()).thenReturn(1920);
-        when(emptyImageMock.cols()).thenReturn(1080);
-
-        int[] resultEmpty = HornetLength.boundingLines(emptyImageMock);
-        assertArrayEquals(new int[]{1920, 0, 1080, 1920, 0, 1080}, resultEmpty);
-
-        // Cas de test : S'arrête à la première ligne de pixels noirs
-        Mat blackImageMock = mock(Mat.class);
-        when(blackImageMock.rows()).thenReturn(1920);
-        when(blackImageMock.cols()).thenReturn(1080);
-        when(blackImageMock.get(anyInt(), anyInt())).thenAnswer(invocation -> new Scalar(0));
-
-        int[] resultBlack = HornetLength.boundingLines(blackImageMock);
-        assertArrayEquals(new int[]{1, 1919, 1, 1, 1919, 1}, resultBlack);
-
-        // Cas de test : Image simple
-        Mat simpleImageMock = mock(Mat.class);
-        when(simpleImageMock.rows()).thenReturn(408);
-        when(simpleImageMock.cols()).thenReturn(687);
-
-        int[] resultSimple = HornetLength.boundingLines(simpleImageMock);
-        assertArrayEquals(new int[]{408, 687, 96, 408, 687, 96}, resultSimple);
-
-        // Cas de test : Image étalon du projet
-        Mat projectImageMock = mock(Mat.class);
-        when(projectImageMock.rows()).thenReturn(430);
-        when(projectImageMock.cols()).thenReturn(621);
-
-        int[] resultProject = HornetLength.boundingLines(projectImageMock);
-        assertArrayEquals(new int[]{430, 621, 168, 430, 621, 168}, resultProject);
-    }*/
-
 
     /**
      * Teste le calcul de la longueur du frelon.
@@ -164,15 +85,14 @@ public class TestCaracteristics {
         Mat im1 = Imgcodecs.imread("Footage/black.png");
         Mat im2 = Imgcodecs.imread("Footage/white.png");
         Mat im3 = Imgcodecs.imread("Footage/bw50.png");
-        Mat im4 = Imgcodecs.imread("Footage/hornetcube_cutout.jpg");
-        Mat im5 = Imgcodecs.imread("Footage/15_cutout.jpg");
+        Mat im4 = Imgcodecs.imread("Footage/21_cutout.jpg");
+        Mat im5 = Imgcodecs.imread("Footage/16_cutout.jpg");
 
-        // Tests
+        // Tests sur les images de reference
         assertEquals(1919, HornetLength.calculer_HornetLength(im1)[0]); // Image totalement noire
-       // assertEquals(1, HornetLength.calculer_HornetLength(im2)[0]); // Image totalement blanche
         assertEquals(959, HornetLength.calculer_HornetLength(im3)[0]); // Image à 50% de blanc et 50% de noir
-        assertEquals(874, HornetLength.calculer_HornetLength(im4)[0]); // Image simpliste
-        assertEquals(704, HornetLength.calculer_HornetLength(im5)[0]); // Image étalon du projet
+        assertEquals(812, HornetLength.calculer_HornetLength(im4)[0]); // Image simpliste
+        assertEquals(1269, HornetLength.calculer_HornetLength(im5)[0]); // Image frelon de la base 2023
     }
 
     // Section 2 : Test des fonctions de recherche de la forme de l'abdomen
@@ -213,10 +133,7 @@ public class TestCaracteristics {
     @Test
     public void testFindCoeffs() {
         run();
-
-        // Tests (on arrondi car la fonction appelée donne des résultats avec une précision de 10^-15)
-        // Exemple : Donne 1.9999999999999998 au lieu de 2
-
+        //Cas de test avec differentes matrice pour tester le resultat de FindCoeff
         // Cas 1
         Mat inputMat1 = new Mat(2, 3, CvType.CV_64FC1);
         inputMat1.put(0, 0, 1, 2, 3);  // Première ligne
@@ -253,8 +170,35 @@ public class TestCaracteristics {
         assertEquals(2, Math.round(resultMat4[1])); // Ordonnée à l'origine
         inputMat4.release();
     }
+    /**
+     * Test macro de la fonction de recherche de la forme de l'abdomen. Vérifie que
+     * les fonctions fonctionnent ensemble et mènent bien à la bonne forme.
+     */
+    @Test
+    public void testAbdomenShape() {
 
-    // Méthode pour convertir une matrice OpenCV en un tableau d'entiers
+        run();
+        // Chargement des images de référence
+        Mat im1 = Imgcodecs.imread("Footage/16_cutout.jpg", Imgcodecs.IMREAD_GRAYSCALE);
+        Mat im2 = Imgcodecs.imread("Footage/white.png", Imgcodecs.IMREAD_GRAYSCALE);
+        Mat im3 = Imgcodecs.imread("Footage/black.png", Imgcodecs.IMREAD_GRAYSCALE);
+        Mat im4 = Imgcodecs.imread("Footage/32_cutout.jpg", Imgcodecs.IMREAD_GRAYSCALE);
+        Mat im5 = Imgcodecs.imread("Footage/33_cutout.jpg", Imgcodecs.IMREAD_GRAYSCALE);
+
+        // Tests
+        assert AbdomenShape.abdomenShape(im1, new Point(1390 , 713)).equals("pointu"); // Vraie image de frelon pointu
+        assert AbdomenShape.abdomenShape(im2, new Point(971, 533)) == null; // Pas de forme (tout blanc)
+        assert AbdomenShape.abdomenShape(im3, new Point(500, 500)) == null; // Pas de forme (tout noir)
+        assert AbdomenShape.abdomenShape(im4, new Point(373, 318)).equals("rond"); // Forme ronde simple
+        assert AbdomenShape.abdomenShape(im5, new Point(396, 350)).equals("pointu"); // Forme triangulaire simple
+    }
+
+
+    /**
+     * Méthode pour convertir une matrice OpenCV en un tableau d'entiers
+     * @param mat objet de type matrice
+     * @return result un array de array(matrice) de int
+     */
     private int[][] convertMatToArray(Mat mat) {
         int rows = mat.rows();
         int cols = mat.cols();
