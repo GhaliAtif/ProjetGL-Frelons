@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Classe pour savoir si le frelon possede un abdomen pointu ou rond et le classifier eventuellement
+ * Classe pour savoir si le frelon possede un abdomen pointu ou rond.
  */
 public class  AbdomenShape {
     /**
-     * Fonction pour déterminer si le frelon possède un abdomen pointu ou rond et le classifier éventuellement.
+     * Fonction pour déterminer si le frelon possède un abdomen pointu ou rond.
      * @param pictureArray Matrice représentant le masque binaire du frelon
      * @param stingCoordinates Coordonnées de l'extrémité de l'abdomen
      * @return Résultat de la forme de l'abdomen ("pointu" ou "rond")
@@ -150,66 +150,101 @@ public class  AbdomenShape {
 
 
     /**
-     * Cherche les points sur l'image.
-     * @param picturePath Chemin de l'image avec les contours de l'abdomen
-     * @return Matrice des coordonnées des points (abscisse et ordonnée)
+     * Cette méthode prend en entrée le chemin d'une image et retourne une matrice contenant les coordonnées
+     * des points dont la couleur est noire dans l'image.
+     *
+     * @param picturePath Le chemin de l'image à analyser.
+     * @return Une matrice (Mat) contenant les coordonnées (x, y) des points noirs dans l'image.
      */
-
     public static Mat findPoints(String picturePath) {
+        // Charger l'image depuis le chemin spécifié
         Mat image = Imgcodecs.imread(picturePath);
+
+        // Récupérer les dimensions de l'image (largeur et hauteur)
         int largeur = image.cols();
         int hauteur = image.rows();
 
+        // Créer une matrice pour stocker les coordonnées des points noirs
         Mat coords = new Mat(2, largeur * hauteur, CvType.CV_32FC1);
+
+        // Compteur pour suivre le nombre de points noirs trouvés
         int count = 0;
 
+        // Parcourir tous les pixels de l'image
         for (int x = 0; x < largeur; x++) {
             for (int y = 0; y < hauteur; y++) {
+                // Récupérer la valeur du pixel à la position (x, y)
                 double[] pixel = image.get(y, x);
+
+                // Vérifier si le pixel est noir (RGB : 0, 0, 0)
                 if (pixel[0] == 0 && pixel[1] == 0 && pixel[2] == 0) {
+                    // Stocker les coordonnées du point noir dans la matrice
                     coords.put(0, count, x);
                     coords.put(1, count, y);
+                    // Incrémenter le compteur de points noirs
                     count++;
                 }
             }
         }
 
+        // Retourner la sous-matrice contenant les coordonnées des points noirs
         return coords.colRange(0, count);
     }
 
     /**
-     * Trouver les coefficients pour faire d'éventuels calculs.
-     * @param coords Matrice des coordonnées des points (abscisse et ordonnée)
-     * @return Coefficient de la fonction représentant la droite de l'abdomen
+     * Cette méthode prend en entrée une matrice de coordonnées (x, y) et utilise une régression polynomiale
+     * d'ordre 1 pour calculer les coefficients du polynôme qui représente la relation entre x et y.
+     *
+     * @param coords La matrice de coordonnées (x, y) des points à utiliser pour la régression polynomiale.
+     * @return Un tableau de doubles contenant les coefficients du polynôme d'ordre 1.
      */
-  public static double[] findCoeffs(Mat coords) {
+    public static double[] findCoeffs(Mat coords) {
+        // Obtenir le nombre total de points dans la matrice
         int size = (int) coords.total();
+
+        // Créer un conteneur pour les points pondérés
         WeightedObservedPoints points = new WeightedObservedPoints();
 
+        // Ajouter les points à partir de la matrice aux points pondérés
         for (int i = 0; i < size / 2; i++) {
+            // Récupérer les coordonnées (x, y) du point dans la matrice
             double x = coords.get(0, i)[0];
             double y = coords.get(1, i)[0];
+            // Ajouter le point aux points pondérés
             points.add(x, y);
         }
 
+        // Utiliser la bibliothèque Apache Commons Math pour effectuer la régression polynomiale d'ordre 1
         PolynomialCurveFitter fitter = PolynomialCurveFitter.create(1);
+        // Calculer les coefficients du polynôme
         double[] coeffs = fitter.fit(points.toList());
 
+        // Retourner les coefficients calculés
         return coeffs;
     }
+
     /**
-     * Fonction pour calculer l'angle à partir des coefficients.
-     * @param m1 Coefficient de la première droite superieure
-     * @param m2 Coefficient de la deuxième droite inferieure
-     * @return Angle entre les deux droites
+     * Cette méthode prend deux pentes de lignes en entrée et calcule l'angle en degrés entre ces deux lignes.
+     * En cas de lignes parallèles, la méthode renvoie Double.NaN (indéfini).
+     *
+     * @param m1 La pente de la première droite superieure.
+     * @param m2 La pente de la deuxième droite inferieure.
+     * @return L'angle en degrés entre les deux lignes, ou Double.NaN en cas de lignes parallèles.
      */
     public static double findAngle(double m1, double m2) {
+        // Vérifier si les pentes sont égales (lignes parallèles)
         if (Double.compare(m1, m2) == 0) {
-            return Double.NaN; //ou cas ou on a des lignes paralleles
+            return Double.NaN; // Cas où les lignes sont parallèles, angle indéfini
         }
+
+        // Calculer la tangente de l'angle entre les deux lignes
         double tan = (m1 - m2) / (1 + m1 * m2);
+
+        // Calculer l'arc tangente et convertir le résultat en degrés
         double arctan = Math.atan(tan);
         double degree = Math.toDegrees(arctan);
+
+        // Retourner l'angle calculé
         return degree;
     }
 

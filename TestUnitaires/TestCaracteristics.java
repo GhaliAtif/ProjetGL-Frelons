@@ -1,4 +1,4 @@
-package Tests;
+package TestUnitaires;
 import Caracteristics.AbdomenShape;
 import Caracteristics.HornetLength;
 import org.junit.Test;
@@ -7,12 +7,7 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
-import java.awt.image.*;
-import java.io.File;
 
-
-import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -50,26 +45,15 @@ public class TestCaracteristics {
     @Test
     public void testBoundingLines() {
         run();
-        // Cas de test : S'arrête à la dernière ligne
+        // Cas de test : Ou il s'arrête à la dernière ligne
         Mat emptyImage = new Mat(1920, 1080, CvType.CV_8UC1);
         int[] resultEmpty = HornetLength.boundingLines(emptyImage);
-        System.out.print("Results: ");
-        for (int i = 0; i < resultEmpty.length; i++) {
-            System.out.print(resultEmpty[i] + " ");
-        }
-        System.out.println();
-
         assertArrayEquals(new int[]{1, 1919, 1}, resultEmpty);
 
-        // Cas de test : Image frelon de la base 2023
+        // Cas de test : Image frelon 2023
         String filepathIMG2 = "Footage/16_cutout.jpg";
         Mat projectImage = Imgcodecs.imread(filepathIMG2);
         int[] resultProject = HornetLength.boundingLines(projectImage);
-        System.out.print("Results: ");
-        for (int i = 0; i < resultProject.length; i++) {
-            System.out.print(resultProject[i] + " ");
-        }
-        System.out.println();
         assertArrayEquals(new int[]{409, 895, 121}, resultProject);
     }
 
@@ -94,6 +78,8 @@ public class TestCaracteristics {
         assertEquals(812, HornetLength.calculer_HornetLength(im4)[0]); // Image simpliste
         assertEquals(1269, HornetLength.calculer_HornetLength(im5)[0]); // Image frelon de la base 2023
     }
+
+
 
     // Section 2 : Test des fonctions de recherche de la forme de l'abdomen
     @Test

@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-public class cutouTest {
+public class CutOut_Test {
     public static void displayImage(Mat image, String title) {
         MatOfByte matOfByte = new MatOfByte();
         Imgcodecs.imencode(".jpg", image, matOfByte);
@@ -45,7 +45,7 @@ public class cutouTest {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         String imagePath = "Footage/32.jpg";
         String title= imagePath.substring(8,10);
-        Mat result = cutout.cutout(imagePath);
+        Mat result = CutOut.cutOut(imagePath);
 
         if (result != null) {
             displayImage(result,title);

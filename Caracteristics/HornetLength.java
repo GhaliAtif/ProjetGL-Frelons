@@ -8,6 +8,13 @@ import org.opencv.imgproc.Imgproc;
 
 public class HornetLength {
 
+    /**
+     * Cette méthode compte le nombre de pixels noirs dans une ligne d'une image binaire.
+     * Si l'image n'est pas en niveaux de gris, elle la convertit en niveaux de gris au préalable.
+     *
+     * @param line La ligne de l'image à analyser.
+     * @return Le nombre de pixels noirs dans la ligne.
+     */
     public static int zeroPixels(Mat line) {
         // Vérifier si l'image est déjà en niveaux de gris
         if (line.channels() > 1) {
@@ -21,6 +28,13 @@ public class HornetLength {
         return blackPixelCount;
     }
 
+    /**
+     * Cette méthode identifie les lignes supérieure, inférieure et gauche d'une zone d'analyse
+     * dans une image binaire représentant un frelon.
+     *
+     * @param arrayImage La matrice de l'image binaire du frelon.
+     * @return Un tableau d'entiers contenant les indices des lignes supérieure, inférieure et gauche de la zone d'analyse.
+     */
     public static int[] boundingLines(Mat arrayImage) {
         // Récupération du nombre de lignes et de colonnes de la matrice de l'image binaire du frelon
         int numberOfLines = arrayImage.rows();
@@ -138,20 +152,23 @@ public class HornetLength {
     }
 
     /**
-     * Méthode pour afficher et dessiner le lignes de boundingLines et la longeur du frelon calculer grace a calculer_HornetLength
-     * @param image
-     * @param imagePath
+     * Cette méthode génère un affichage visuel mettant en évidence les lignes de recherche et la longueur maximale du frelon
+     * dans une image binaire donnée. L'image résultante est également enregistrée sur le disque avec les annotations.
+     *
+     * @param image      L'image binaire du frelon à traiter.
+     * @param imagePath  Le chemin de l'image d'origine utilisé pour générer le résultat.
      */
     public static void resultPlot(Mat image, String imagePath) {
+        // Charger l'image d'origine pour les opérations de visualisation
         Mat inputImage = Imgcodecs.imread(imagePath);
 
-        // calcluler les bounding lines
+        // Calculer les lignes délimitant la zone d'analyse
         int[] lines = boundingLines(inputImage);
         int upperLine = lines[0];
         int lowerLine = lines[1];
         int leftLine = lines[2];
 
-        // Calculer la longeur de frelon
+        // Calculer la longueur du frelon et les coordonnées du dard
         int[] lengthInfo = calculer_HornetLength(inputImage);
         int stingX = lengthInfo[1];
         int stingY = lengthInfo[2];
@@ -159,40 +176,40 @@ public class HornetLength {
         int numberOfLines = image.rows();
         int numberOfColumns = image.cols();
 
-        // Convertir l'image en image a couleurs
+        // Convertir l'image binaire en image couleur
         Mat colorPicture = new Mat();
         Imgproc.cvtColor(image, colorPicture, Imgproc.COLOR_GRAY2BGR);
 
-
-        // Ligne inférieure
+        // Dessiner la ligne inférieure
         Imgproc.line(colorPicture, new Point(0, lowerLine), new Point(numberOfColumns - 1, lowerLine), new Scalar(0, 0, 255), 2);
 
-        // Ligne supérieure
+        // Dessiner la ligne supérieure
         Imgproc.line(colorPicture, new Point(0, upperLine), new Point(numberOfColumns - 1, upperLine), new Scalar(0, 0, 255), 2);
 
-        // Ligne gauche
+        // Dessiner la ligne gauche
         Imgproc.line(colorPicture, new Point(leftLine, 0), new Point(leftLine, numberOfLines - 1), new Scalar(0, 0, 255), 2);
 
-        // Ligne droite
-        int positionX = stingX;  // Assuming the length line starts from the sting coordinates
+        // Dessiner la ligne droite (à partir des coordonnées du dard)
+        int positionX = stingX; // En supposant que la ligne de longueur commence des coordonnées du dard
         Imgproc.line(colorPicture, new Point(positionX, 0), new Point(positionX, numberOfLines - 1), new Scalar(0, 0, 255), 2);
 
-        // Ligne de longueur maximale
+        // Dessiner la ligne de longueur maximale
         Imgproc.line(colorPicture, new Point(leftLine, stingY), new Point(stingX, stingY), new Scalar(0, 255, 0), 2);
 
-        // Extrémité de la ligne de longueur maximale(POINT DE PUNTE DE FRELON)
+        // Dessiner l'extrémité de la ligne de longueur maximale (point de dard de frelon)
         Imgproc.circle(colorPicture, new Point(stingX, stingY), 10, new Scalar(255, 75, 0), -1);
 
-        HighGui.imshow("Zone de traitment et longeur maximale", colorPicture);
+        // Afficher l'image résultante dans une fenêtre
+        HighGui.imshow("Zone de traitement et longueur maximale", colorPicture);
 
-
-        // Écriture de l'image avec les lignes de recherche dessinées pour démonstration
+        // Écrire l'image avec les lignes de recherche dessinées pour démonstration
         String outputfile = imagePath.substring(0, imagePath.length() - 4) + "_length.jpg";
         outputfile = outputfile.replace("Footage/", "Footage/");
         System.out.println(outputfile);
         Imgcodecs.imwrite(outputfile, colorPicture);
-        HighGui.waitKey(0);
 
+        // Attendre une touche pour fermer la fenêtre
+        HighGui.waitKey(0);
     }
 
 
