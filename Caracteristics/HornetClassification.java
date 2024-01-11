@@ -2,6 +2,8 @@ package Caracteristics;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.opencv.highgui.HighGui;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -32,10 +34,11 @@ public class HornetClassification {
 
     /**
      * Fonction pour determiner si le frelon est male,ouvriere ou fondatrice.
-     * @param pictureFile Chemin d'accès à l'image.
+     * @param filePath Chemin d'accès à l'image.
      * @return Caste du frelon.
      */
-    public static Map<String, String> classifyHornet(Mat pictureFile) {
+    public static Map<String, String> classifyHornet(String filePath) {
+        Mat imageATraiter = Imgcodecs.imread(filePath);
         // Ouverture du xml des paramètres
         Document parameters = parseXmlDocument("Results/parameters.xml");
 
@@ -50,13 +53,13 @@ public class HornetClassification {
         Map<String, String> characteristics = new HashMap<>();
 
         // Recherche de la longueur du frelon
-        int[] hornetLengthValue = HornetLength.calculer_HornetLength(pictureFile);
+        int[] hornetLengthValue = HornetLength.calculer_HornetLength(imageATraiter);
         double reelLength = hornetLengthValue[0] / (double) scale;
         characteristics.put("Longeur du frelon:", String.valueOf(reelLength));
 
         // Recherche de la forme de l'abdomen
         Point stingCoordinates = new Point(hornetLengthValue[1], hornetLengthValue[2]);
-        String abdomenShapeValue = AbdomenShape.abdomenShape(pictureFile, stingCoordinates);
+        String abdomenShapeValue = AbdomenShape.abdomenShape(imageATraiter, stingCoordinates);
         characteristics.put("Forme de l'abdomen du frelon:", abdomenShapeValue);
 
         // Détermination de la caste
@@ -110,6 +113,7 @@ public class HornetClassification {
 
             }
         }
+
 
         return characteristics;
     }

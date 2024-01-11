@@ -155,30 +155,42 @@ public class HornetLength {
      * Cette méthode génère un affichage visuel mettant en évidence les lignes de recherche et la longueur maximale du frelon
      * dans une image binaire donnée. L'image résultante est également enregistrée sur le disque avec les annotations.
      *
-     * @param image      L'image binaire du frelon à traiter.
      * @param imagePath  Le chemin de l'image d'origine utilisé pour générer le résultat.
      */
-    public static void resultPlot(Mat image, String imagePath) {
+    public static void resultPlot(String imagePath) {
         // Charger l'image d'origine pour les opérations de visualisation
-        Mat inputImage = Imgcodecs.imread(imagePath);
+        Mat imageATraiter = Imgcodecs.imread(imagePath);
+        // Génération d'une copie de la matrice de l'image binaire du frelon pour pouvoir la manipuler
+        Mat arrayImage = new Mat();
+        imageATraiter.copyTo(arrayImage);
+
+        // Vérifier si l'image est chargée correctement
+        if (imageATraiter.empty()) {
+            System.err.println("Erreur lors du chargement de l'image.");
+            System.exit(1);
+        }
+        // Assurez-vous que l'image est en niveaux de gris
+        if (arrayImage.channels() > 1) {
+            Imgproc.cvtColor(arrayImage, arrayImage, Imgproc.COLOR_BGR2GRAY);
+        }
 
         // Calculer les lignes délimitant la zone d'analyse
-        int[] lines = boundingLines(inputImage);
+        int[] lines = boundingLines(arrayImage);
         int upperLine = lines[0];
         int lowerLine = lines[1];
         int leftLine = lines[2];
 
         // Calculer la longueur du frelon et les coordonnées du dard
-        int[] lengthInfo = calculer_HornetLength(inputImage);
+        int[] lengthInfo = calculer_HornetLength(arrayImage);
         int stingX = lengthInfo[1];
         int stingY = lengthInfo[2];
 
-        int numberOfLines = image.rows();
-        int numberOfColumns = image.cols();
+        int numberOfLines = imageATraiter.rows();
+        int numberOfColumns = imageATraiter.cols();
 
         // Convertir l'image binaire en image couleur
         Mat colorPicture = new Mat();
-        Imgproc.cvtColor(image, colorPicture, Imgproc.COLOR_GRAY2BGR);
+        Imgproc.cvtColor(arrayImage, colorPicture, Imgproc.COLOR_GRAY2BGR);
 
         // Dessiner la ligne inférieure
         Imgproc.line(colorPicture, new Point(0, lowerLine), new Point(numberOfColumns - 1, lowerLine), new Scalar(0, 0, 255), 2);
@@ -211,7 +223,6 @@ public class HornetLength {
         // Attendre une touche pour fermer la fenêtre
         HighGui.waitKey(0);
     }
-
 
 
 }
