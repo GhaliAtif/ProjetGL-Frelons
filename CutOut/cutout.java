@@ -5,7 +5,11 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
 public class cutout {
-
+    /**
+     *
+     * @param filename
+     * @return
+     */
     public static Mat cutout(String filename) {
         try {
             // Chargement de l'image
@@ -19,8 +23,9 @@ public class cutout {
             Imgproc.cvtColor(img, imgHSV, Imgproc.COLOR_BGR2HSV);
 
             Scalar color1 = new Scalar(10, 200, 20);  // Borne sombre du spectre de couleur jaune à garder
+            //Scalar color1 = new Scalar(10, 20, 0);  // Borne sombre du spectre de couleur jaune à garder
             Scalar color2 = new Scalar(45, 255, 255);  // Borne claire du spectre de couleur jaune à garder
-
+            //Scalar color2 = new Scalar(50, 255, 255);  // Borne claire du spectre de couleur jaune à garder
             // Création du masque principal (Masque de niveau de gris)
             MatOfFloat threshold = new MatOfFloat(90);
             Mat mask = new Mat();
@@ -52,6 +57,8 @@ public class cutout {
             return null;
         }
     }
+
+
 
 
 }

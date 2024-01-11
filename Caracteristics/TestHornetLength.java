@@ -13,7 +13,7 @@ public class TestHornetLength {
     public static void main(String[] args) {
         // Charger l'image depuis un fichier
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        String imagePath = "Footage/16_cutout.jpg";
+        String imagePath = "Footage/16_cutout.jpg";//CutoutResult of Cutout.jpg
         Mat image = Imgcodecs.imread(imagePath);
 
         // Vérifier si l'image est chargée correctement
@@ -27,13 +27,13 @@ public class TestHornetLength {
             Imgproc.cvtColor(image, image, Imgproc.COLOR_BGR2GRAY);
        }
         // Check the number of channels in the input image
-        System.out.println("Number of channels: " + image.channels());
+        //System.out.println("Number of channels: " + image.channels());
 
         // Appliquer l'analyse de la longueur du frelon
-        int[] lengthResult = HornetLength.calculer_HornetLength(image);
+        //int[] lengthResult = HornetLength.calculer_HornetLength(image);
 
         // Afficher la longueur du frelon
-        System.out.println("Longueur du frelon : " + lengthResult[0]);
+        //System.out.println("Longueur du frelon : " + lengthResult[0]);
 
         // Appliquer la visualisation des résultats
         HornetLength.resultPlot(image, imagePath);
@@ -41,19 +41,6 @@ public class TestHornetLength {
         // Attendre la fermeture de la fenêtre graphique
         HighGui.waitKey();
     }
-
-   /* public static void testHornetLengthForImage(Mat image, String imagePath) {
-        // Appel de la fonction hornetLength avec l'image et le chemin de l'image
-        int[] result = HornetLength.calculer_HornetLength(image);
-       // int[] resultBoundingLines= HornetLength.boundingLines(image);
-
-        // Affichage des résultats
-        System.out.println("Longueur du frelon : " + result[0]);
-        System.out.println("Coordonnées de l'extrémité de l'abdomen : (" + result[1] + ", " + result[2] + ")");
-
-        // Appel de la fonction resultPlot avec les résultats
-        //HornetLength.resultPlot(image, result[1], result[2], result[2], result[0], 0, image.rows(), image.cols(), imagePath);
-    }*/
 
 
 }

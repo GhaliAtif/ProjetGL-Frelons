@@ -5,6 +5,7 @@ import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
+
 public class HornetLength {
 
     public static int zeroPixels(Mat line) {
@@ -20,15 +21,14 @@ public class HornetLength {
         return blackPixelCount;
     }
 
-
-   /* public static int[] boundingLines(Mat arrayImage) {
+    public static int[] boundingLines(Mat arrayImage) {
         // Récupération du nombre de lignes et de colonnes de la matrice de l'image binaire du frelon
         int numberOfLines = arrayImage.rows();
         int numberOfColumns = arrayImage.cols();
 
         System.out.println("Number of lines: " + numberOfLines);
 
-        // Recherche de la ligne inférieure de la zone d'analyse
+        // Recherche le la ligne inférieure de la zone d'analyse
         int counter = numberOfLines;
         int pixelCount = 0;
 
@@ -40,98 +40,42 @@ public class HornetLength {
 
         int lowerLine = counter;
 
-        // Recherche de la ligne supérieure de la zone d'analyse
-
+        // Recherche le la ligne supérieure de la zone d'analyse
         counter = 0;
         pixelCount = 0;
-
-        double verticalNumber = numberOfLines * 0.1;  // Added verticalNumber
-        int upperLine = 0;  // Initialize upperLine outside the loop
 
         while (pixelCount < horizontalNumber && counter < numberOfLines) {
             pixelCount = zeroPixels(arrayImage.row(counter));
             counter++;
         }
 
-        upperLine = counter;  // Assign the value after exiting the loop
+        int upperLine = counter;
 
         // Recherche de la colonne gauche de la zone d'analyse
-
         counter = 0;
         pixelCount = 0;
-        int leftLine = 0;  // Initialize leftLine outside the loop
 
+        double verticalNumber = numberOfLines * 0.1;
         while (pixelCount < verticalNumber && counter < numberOfColumns) {
             pixelCount = zeroPixels(arrayImage.col(counter));
             counter++;
         }
 
-        if (counter < numberOfColumns) {
-            leftLine = counter;
-        } else {
-            System.out.println("No pixels found in the left column");
-            // Handle this case appropriately based on your requirements
-        }
+        int leftLine = counter;
 
-        System.out.println("Upper line: " + upperLine);
-        System.out.println("Lower line: " + lowerLine);
-        System.out.println("Left line: " + leftLine);
+        return new int[]{upperLine, lowerLine, leftLine};
+    }
 
-        // Return the values
-        return new int[]{upperLine, lowerLine, leftLine, upperLine, lowerLine, leftLine};
-    }*/
-   public static int[] boundingLines(Mat arrayImage) {
-       // Récupération du nombre de lignes et de colonnes de la matrice de l'image binaire du frelon
-       int numberOfLines = arrayImage.rows();
-       int numberOfColumns = arrayImage.cols();
+    /**
+     * Calcule la longueur et les coordonnées du frelon basé sur l'image binaire fournie.
+     *
+     * @param image Image binaire représentant le frelon.
+     * @return Un tableau contenant la longueur du frelon et ses coordonnées.
+     *         Le format du tableau est {longueur, coordonnéeX, coordonnéeY}.
+     *         Si aucun pixel n'est trouvé, la longueur sera 0 et les coordonnées seront (0, 0).
+     */
 
-       System.out.println("Number of lines: " + numberOfLines);
-
-       // Recherche le la ligne inférieure de la zone d'analyse
-       int counter = numberOfLines;
-       int pixelCount = 0;
-
-       double horizontalNumber = numberOfColumns * 0.4;
-       while (pixelCount < horizontalNumber && counter > 0) {
-           pixelCount = zeroPixels(arrayImage.row(counter - 1));
-           counter--;
-       }
-
-       int lowerLine = counter;
-
-       // Recherche le la ligne supérieure de la zone d'analyse
-       counter = 0;
-       pixelCount = 0;
-
-       while (pixelCount < horizontalNumber && counter < numberOfLines) {
-           pixelCount = zeroPixels(arrayImage.row(counter));
-           counter++;
-       }
-
-       int upperLine = counter;
-
-       // Recherche de la colonne gauche de la zone d'analyse
-       counter = 0;
-       pixelCount = 0;
-
-       double verticalNumber = numberOfLines * 0.1;
-       while (pixelCount < verticalNumber && counter < numberOfColumns) {
-           pixelCount = zeroPixels(arrayImage.col(counter));
-           counter++;
-       }
-
-       int leftLine = counter;
-
-       System.out.println("Upper line: " + upperLine);
-       System.out.println("Lower line: " + lowerLine);
-       System.out.println("Left line: " + leftLine);
-
-       // Return the values
-       return new int[]{upperLine, lowerLine, leftLine};
-   }
-
-
-    public static int[] calculer_HornetLength(Mat picture) {
+    public static int[] calculer_HornetLength(Mat image) {
 
         int pixelCount = 0;
         int indexMax = 0;
@@ -139,7 +83,7 @@ public class HornetLength {
 
         // Génération d'une copie de la matrice de l'image binaire du frelon pour pouvoir la manipuler
         Mat arrayImage = new Mat();
-        picture.copyTo(arrayImage);
+        image.copyTo(arrayImage);
 
         // Assurez-vous que l'image est en niveaux de gris
         if (arrayImage.channels() > 1) {
@@ -187,14 +131,18 @@ public class HornetLength {
             System.out.println("Exception: " + e.getMessage());
         }
 
-        System.out.println("Pixel count: " + pixelCount);
-        int lengthValue = pixelCount;
-
-        return new int[]{lengthValue, stingCoordinates[0], stingCoordinates[1]};
+        System.out.println("Longeur du frelon: " + pixelCount);
+        int lengthValue = pixelCount;//longeur du frelon
+        System.out.println("Sting coordinates"+"( "+stingCoordinates[0]+" ; "+stingCoordinates[1]+" )");
+        return new int[]{lengthValue, stingCoordinates[0], stingCoordinates[1]};//longueur, coordonnéeX, coordonnéeY
     }
 
-    public static int resultPlot(Mat picture, String imagePath) {
-        // Assuming you have an input image (replace "your_image_path" with the actual path)
+    /**
+     * Méthode pour afficher et dessiner le lignes de boundingLines et la longeur du frelon calculer grace a calculer_HornetLength
+     * @param image
+     * @param imagePath
+     */
+    public static void resultPlot(Mat image, String imagePath) {
         Mat inputImage = Imgcodecs.imread(imagePath);
 
         // calcluler les bounding lines
@@ -205,20 +153,16 @@ public class HornetLength {
 
         // Calculer la longeur de frelon
         int[] lengthInfo = calculer_HornetLength(inputImage);
-        int lengthValue = lengthInfo[0];
         int stingX = lengthInfo[1];
         int stingY = lengthInfo[2];
 
-        int numberOfLines = picture.rows();
-        int numberOfColumns = picture.cols();
+        int numberOfLines = image.rows();
+        int numberOfColumns = image.cols();
 
-        // Convertir l'image en niveaux de gris
-        // Imgproc.cvtColor(picture, picture, Imgproc.COLOR_BGR2GRAY);
+        // Convertir l'image en image a couleurs
         Mat colorPicture = new Mat();
-        // Convertir l'image en niveaux de gris si elle n'est pas déjà en niveaux de gris
-        // if (picture.channels() > 1) {
-        Imgproc.cvtColor(picture, colorPicture, Imgproc.COLOR_GRAY2BGR);
-        // }
+        Imgproc.cvtColor(image, colorPicture, Imgproc.COLOR_GRAY2BGR);
+
 
         // Ligne inférieure
         Imgproc.line(colorPicture, new Point(0, lowerLine), new Point(numberOfColumns - 1, lowerLine), new Scalar(0, 0, 255), 2);
@@ -234,13 +178,13 @@ public class HornetLength {
         Imgproc.line(colorPicture, new Point(positionX, 0), new Point(positionX, numberOfLines - 1), new Scalar(0, 0, 255), 2);
 
         // Ligne de longueur maximale
-        Imgproc.line(colorPicture, new Point(leftLine, stingY), new Point(stingX, stingY),
-                new Scalar(0, 255, 0), 2);
+        Imgproc.line(colorPicture, new Point(leftLine, stingY), new Point(stingX, stingY), new Scalar(0, 255, 0), 2);
 
-        // Extrémité de la ligne de longueur maximale
+        // Extrémité de la ligne de longueur maximale(POINT DE PUNTE DE FRELON)
         Imgproc.circle(colorPicture, new Point(stingX, stingY), 10, new Scalar(255, 75, 0), -1);
 
-        HighGui.imshow("Hornet length", colorPicture);
+        HighGui.imshow("Zone de traitment et longeur maximale", colorPicture);
+
 
         // Écriture de l'image avec les lignes de recherche dessinées pour démonstration
         String outputfile = imagePath.substring(0, imagePath.length() - 4) + "_length.jpg";
@@ -249,8 +193,9 @@ public class HornetLength {
         Imgcodecs.imwrite(outputfile, colorPicture);
         HighGui.waitKey(0);
 
-        return 0;
     }
+
+
 
 }
 

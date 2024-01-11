@@ -52,12 +52,12 @@ public class HornetClassification {
             // Recherche de la longueur du frelon
             int[] hornetLengthValue = HornetLength.calculer_HornetLength(pictureFile);
             double reelLength = hornetLengthValue[0] / (double) scale;
-            characteristics.put("hornetlength", String.valueOf(reelLength));
+            characteristics.put("Longeur du frelon:", String.valueOf(reelLength));
 
             // Recherche de la forme de l'abdomen
             Point stingCoordinates = new Point(hornetLengthValue[1], hornetLengthValue[2]);
             String abdomenShapeValue = AbdomenShape.abdomenShape(pictureFile, stingCoordinates);
-            characteristics.put("abdomenshape", abdomenShapeValue);
+            characteristics.put("Forme de l'abdomen du frelon:", abdomenShapeValue);
 
             // Détermination de la caste
             //if (actualMonth <= seuil && flag == 0) {

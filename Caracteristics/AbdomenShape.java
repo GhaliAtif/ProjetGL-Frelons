@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Classe pour savoir si le frelon possede un abdomen pointu ou rondu et le classifier eventuellement
+ * Classe pour savoir si le frelon possede un abdomen pointu ou rond et le classifier eventuellement
  */
 public class  AbdomenShape {
     /**
@@ -55,14 +55,14 @@ public class  AbdomenShape {
         Mat whiteBlankImageTop = Mat.ones(new Size(100, 100), CvType.CV_8U);
 
         // Dessin des contours filtrés sur l'image blanche
-        double seuilMin = 100; // Ajustez la valeur du seuil selon vos besoins
+        double seuilMin = 100;
         List<MatOfPoint> filteredContoursTop = new ArrayList<>();
         for (MatOfPoint contour : contoursTop) {
             if (Imgproc.contourArea(contour) > seuilMin) {
                 filteredContoursTop.add(contour);
             }
         }
-       // Imgproc.drawContours(whiteBlankImageTop, filteredContoursTop, -1, new Scalar(0, 0, 0), 1);
+
         Imgproc.drawContours(whiteBlankImageTop, filteredContoursTop, 0, new Scalar(255, 255, 255), 1);
 
         Imgcodecs.imwrite("Footage/Contour_dard_haut.jpg", whiteBlankImageTop);
@@ -122,8 +122,10 @@ public class  AbdomenShape {
         }
 
         // Suppression des fichiers temporaires
-      //  new File("Footage/Contour_dard_haut.jpg").delete();
-       // new File("Footage/Contour_dard_bas.jpg").delete();
+        /*new File("Footage/Contour_dard_haut.jpg").delete();
+        new File("Footage/Contour_dard_bas.jpg").delete();
+        new File("Footage/ZoomTOP.jpg").delete();
+        new File("Footage/ZoomDOWN.jpg").delete();*/
 
         // Calcul de l'angle
         double angle = Math.round(findAngle(m1[1], m2[1]));

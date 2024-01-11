@@ -18,7 +18,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" exported="" name="mockito.core" level="application" />
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
