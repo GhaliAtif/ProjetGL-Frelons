@@ -6,9 +6,11 @@ import org.opencv.imgproc.Imgproc;
 
 public class CutOut {
     /**
+     * Cette méthode effectue le découpage d'une image en extrayant une région spécifique de couleur jaune.
      *
-     * @param filename
-     * @return
+     * @param filename Le chemin du fichier de l'image à traiter.
+     * @return Un objet Mat représentant le masque résultant après le découpage de l'image.
+     *         Retourne null en cas d'erreur lors du traitement.
      */
     public static Mat cutOut(String filename) {
         try {
@@ -22,8 +24,9 @@ public class CutOut {
             Mat imgHSV = new Mat();
             Imgproc.cvtColor(img, imgHSV, Imgproc.COLOR_BGR2HSV);
 
-            Scalar color1 = new Scalar(10, 200, 20);  // Borne sombre du spectre de couleur jaune à garder
+            Scalar color1 = new Scalar(10, 180, 20);  // Borne sombre du spectre de couleur jaune à garder
             Scalar color2 = new Scalar(45, 255, 255);  // Borne claire du spectre de couleur jaune à garder
+
             // Création du masque principal (Masque de niveau de gris)
             MatOfFloat threshold = new MatOfFloat(90);
             Mat mask = new Mat();
@@ -47,6 +50,12 @@ public class CutOut {
             Mat smoothedMask = new Mat();
             Imgproc.morphologyEx(intermediateSmoothedMask, smoothedMask, Imgproc.MORPH_CLOSE, new Mat());
 
+            // Sauvegarde de l'image résultat
+            String title= filename.substring(8,10);
+            String outputPath = "Footage/"+title+"_cutout.jpg";
+            Imgcodecs.imwrite(outputPath, img);
+            System.out.println("Result saved as: " + outputPath);
+
             return smoothedMask;
 
         } catch (Exception e) {
@@ -55,8 +64,5 @@ public class CutOut {
             return null;
         }
     }
-
-
-
 
 }
