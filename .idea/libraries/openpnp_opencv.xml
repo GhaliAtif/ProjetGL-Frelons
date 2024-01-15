@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="openpnp.opencv" type="repository">
+    <properties maven-id="org.openpnp:opencv:4.5.5-0" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/openpnp/opencv/4.5.5-0/opencv-4.5.5-0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
