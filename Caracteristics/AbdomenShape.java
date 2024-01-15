@@ -51,10 +51,10 @@ public class  AbdomenShape {
         Imgproc.findContours(edgedTop, contoursTop, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_NONE);
 
 
-        // Création d'une image blanche
+        // Création d'une image noire
         Mat whiteBlankImageTop = Mat.ones(new Size(100, 100), CvType.CV_8U);
 
-        // Dessin des contours filtrés sur l'image blanche
+        // Dessin des contours filtrés sur l'image noire
         double seuilMin = 100;
         List<MatOfPoint> filteredContoursTop = new ArrayList<>();
         for (MatOfPoint contour : contoursTop) {
@@ -97,10 +97,10 @@ public class  AbdomenShape {
         List<MatOfPoint> contoursBottom = new ArrayList<>();
         Imgproc.findContours(edgedBottom, contoursBottom, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_NONE);
 
-        // Création d'une image blanche
+        // Création d'une image noire
         Mat whiteBlankImageBottom = Mat.ones(new Size(100, 100), CvType.CV_8U);
 
-        // Dessin des contours filtrés sur l'image blanche
+        // Dessin des contours filtrés sur l'image noire
         List<MatOfPoint> filteredContoursBottom = new ArrayList<>();
         for (MatOfPoint contour : contoursBottom) {
             if (Imgproc.contourArea(contour) > seuilMin) {

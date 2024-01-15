@@ -4,6 +4,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -26,6 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+
+
 /**
  * Classe pour la classification des frelons en donnant ca caste( ouvriere,fondatrice ou male)
  */
@@ -39,6 +42,20 @@ public class HornetClassification {
      */
     public static Map<String, String> classifyHornet(String filePath) {
         Mat imageATraiter = Imgcodecs.imread(filePath);
+        // Génération d'une copie de la matrice de l'image binaire du frelon pour pouvoir la manipuler
+        Mat imageTemp = new Mat();
+        imageATraiter.copyTo(imageTemp);
+
+        // Vérifier si l'image est chargée correctement
+        if (imageTemp.empty()) {
+            System.err.println("Erreur lors du chargement de l'image.");
+            System.exit(1);
+        }
+        // Assurez-vous que l'image est en niveaux de gris
+        if (imageTemp.channels() > 1) {
+            Imgproc.cvtColor(imageTemp, imageTemp, Imgproc.COLOR_BGR2GRAY);
+        }
+
         // Ouverture du xml des paramètres
         Document parameters = parseXmlDocument("Results/parameters.xml");
 
@@ -53,13 +70,13 @@ public class HornetClassification {
         Map<String, String> characteristics = new HashMap<>();
 
         // Recherche de la longueur du frelon
-        int[] hornetLengthValue = HornetLength.calculer_HornetLength(imageATraiter);
+        int[] hornetLengthValue = HornetLength.calculer_HornetLength(imageTemp);
         double reelLength = hornetLengthValue[0] / (double) scale;
         characteristics.put("Longeur du frelon:", String.valueOf(reelLength));
 
         // Recherche de la forme de l'abdomen
         Point stingCoordinates = new Point(hornetLengthValue[1], hornetLengthValue[2]);
-        String abdomenShapeValue = AbdomenShape.abdomenShape(imageATraiter, stingCoordinates);
+        String abdomenShapeValue = AbdomenShape.abdomenShape(imageTemp, stingCoordinates);
         characteristics.put("Forme de l'abdomen du frelon:", abdomenShapeValue);
 
         // Détermination de la caste
@@ -101,12 +118,11 @@ public class HornetClassification {
         System.out.println("Longeur Minimale : " + minLength);
         System.out.println("Longeur Maximale : " + maxLength);
         //Determination de la caste du frelon en se basant sur la longeur minimale
+        String casteResultante;
         if (abdomenShapeValue != null) {
-            if (abdomenShapeValue.equals("pointu") && reelLength >= maxLength) {
-                characteristics.put("cast", "Reine ou Fondatrice");
-
-            } else if (abdomenShapeValue.equals("pointu") && (reelLength >= minLength || reelLength < maxLength)) {
-                characteristics.put("cast", "Ouvriere");
+            if (abdomenShapeValue.equals("pointu")) {
+                casteResultante=CasteDetector.estimerCasteFrelon(reelLength);
+                characteristics.put("cast","Femelle "+ casteResultante);
 
             } else if (abdomenShapeValue.equals("rond")) {
                 characteristics.put("cast", "Male");
