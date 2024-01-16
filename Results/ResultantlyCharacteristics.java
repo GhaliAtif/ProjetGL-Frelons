@@ -23,7 +23,7 @@ public class ResultantlyCharacteristics {
     public static void main(String[] args) throws Exception {
 
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        String filePath="Footage/16_cutout.jpg";
+        String filePath="Footage/32_cutout.jpg";
         //Classification du frelon
         Map<String, String> results = HornetClassification.classifyHornet(filePath);
 

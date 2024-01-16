@@ -175,7 +175,7 @@ public class TestCaracteristics {
         assert AbdomenShape.abdomenShape(im1, new Point(1390 , 713)).equals("pointu"); // Vraie image de frelon pointu
         assert AbdomenShape.abdomenShape(im2, new Point(971, 533)) == null; // Pas de forme (tout blanc)
         assert AbdomenShape.abdomenShape(im3, new Point(500, 500)) == null; // Pas de forme (tout noir)
-        assert AbdomenShape.abdomenShape(im4, new Point(373, 318)).equals("rond"); // Forme ronde simple
+        assert AbdomenShape.abdomenShape(im4, new Point(379, 319)).equals("rond"); // Forme ronde simple
         assert AbdomenShape.abdomenShape(im5, new Point(396, 350)).equals("pointu"); // Forme triangulaire simple
     }
 
